@@ -190,11 +190,25 @@ export class DecoratorInjector implements Injector {
           } else {
             try {
               const result = prototype.apply(this, args);
+              // This handles the case where a function isn't async but returns a Promise
+              if (result && typeof result.then === 'function') {
+                return result
+                  .catch((error) => {
+                    DecoratorInjector.recordException(error, span);
+                  })
+                  .finally(() => span.finish());
+              }
+
+              span.finish();
               return result;
             } catch (error) {
-              DecoratorInjector.recordException(error, span);
-            } finally {
-              span.finish();
+              // recordException re-throws, so finish in a finally to ensure
+              // the span is always closed on a synchronous exception.
+              try {
+                DecoratorInjector.recordException(error, span);
+              } finally {
+                span.finish();
+              }
             }
           }
         });
