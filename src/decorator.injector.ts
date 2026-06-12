@@ -202,8 +202,13 @@ export class DecoratorInjector implements Injector {
               span.finish();
               return result;
             } catch (error) {
-              DecoratorInjector.recordException(error, span);
-              span.finish();
+              // recordException re-throws, so finish in a finally to ensure
+              // the span is always closed on a synchronous exception.
+              try {
+                DecoratorInjector.recordException(error, span);
+              } finally {
+                span.finish();
+              }
             }
           }
         });
