@@ -717,8 +717,8 @@ describe('DecoratorInjector', () => {
   });
 
   it('should be usable with other annotations', async () => {
-    // eslint-disable-next-line prettier/prettier
-    const pipe = new (function transform() { })();
+    // @nestjs/common >= 11.2 requires a pipe to expose a transform() method.
+    const pipe = { transform: (value: unknown) => value };
 
     // given
     @Controller()
