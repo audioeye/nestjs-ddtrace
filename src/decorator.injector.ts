@@ -2,13 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { Constants } from './constants';
 import { MetadataScanner, ModulesContainer } from '@nestjs/core';
-import {
-  Controller,
-  Injectable as InjectableInterface,
-} from '@nestjs/common/interfaces';
+import { Controller } from '@nestjs/common/interfaces/controllers/controller.interface';
+import { Injectable as InjectableInterface } from '@nestjs/common/interfaces/injectable.interface';
 import tracer, { Span } from 'dd-trace';
 import { Injector } from './injector.interface';
-import { InjectorOptions } from 'src/injector-options.interface';
+import { InjectorOptions } from './injector-options.interface';
 
 @Injectable()
 export class DecoratorInjector implements Injector {

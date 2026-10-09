@@ -1,10 +1,13 @@
 {
-  "name": "nestjs-ddtrace",
+  "name": "@audioeye/nestjs-ddtrace",
   "version": "6.0.0",
   "description": "NestJS Datadog Trace Library",
   "repository": {
     "type": "git",
     "url": "https://github.com/audioeye/nestjs-ddtrace"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "nestjs",
@@ -33,23 +36,26 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "peerDependencies": {
-    "@nestjs/common": "^11.0.0",
-    "@nestjs/core": "^11.0.0",
+    "@nestjs/common": "^11.0.0 || ^12.0.0",
+    "@nestjs/core": "^11.0.0 || ^12.0.0",
     "dd-trace": "^5"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.2",
-    "@nestjs/common": "^11.0.6",
-    "@nestjs/core": "^11.0.6",
-    "@nestjs/microservices": "^11.0.6",
-    "@nestjs/platform-express": "^11.0.6",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.6",
+    "@babel/plugin-transform-dynamic-import": "^7.29.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.29.7",
+    "@nestjs/cli": "^12.0.8",
+    "@nestjs/common": "^12.1.2",
+    "@nestjs/core": "^12.1.2",
+    "@nestjs/microservices": "^12.1.2",
+    "@nestjs/platform-express": "^12.1.2",
+    "@nestjs/schematics": "^12.0.6",
+    "@nestjs/testing": "^12.1.2",
     "@types/jest": "29.5.14",
     "@types/node": "^22.12.0",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
+    "babel-jest": "^29.7.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -59,11 +65,11 @@
     "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
-    "ts-jest": "29.2.5",
+    "ts-jest": "29.4.14",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "4.2.0",
-    "typescript": "^5.7.3"
+    "typescript": "^6.0.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -74,12 +80,16 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.ts$": "ts-jest",
+      "^.+\\.js$": "<rootDir>/../jest.esm-transform.cjs"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@nestjs/)"
+    ]
   }
 }

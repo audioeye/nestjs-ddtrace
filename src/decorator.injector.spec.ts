@@ -5,7 +5,7 @@ import { DatadogTraceModule } from './datadog-trace.module';
 import { Span } from './span.decorator';
 import { Constants } from './constants';
 import { tracer, Span as TraceSpan, Scope } from 'dd-trace';
-import * as request from 'supertest';
+import request from 'supertest';
 import { PATH_METADATA, PIPES_METADATA } from '@nestjs/common/constants';
 import {
   PATTERN_METADATA,
