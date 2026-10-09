@@ -1,17 +1,18 @@
-import { DynamicModule, Module, type ModuleMetadata } from '@nestjs/common';
-import { FactoryProvider } from '@nestjs/common/interfaces/modules/provider.interface';
+import { DynamicModule, type ModuleMetadata } from '@nestjs/common';
 import { TraceService } from './trace.service';
 import { DecoratorInjector } from './decorator.injector';
-import { Injector } from 'src/injector.interface';
+import { Injector } from './injector.interface';
 import { Constants } from './constants';
 import { DatadogTraceModuleOptions } from './datadog-trace-module-options.interface';
 
-interface DatadogTraceAsyncModuleOptions extends Pick<ModuleMetadata, 'imports'> {
-  useFactory: (...args: any[]) => Promise<DatadogTraceModuleOptions> | DatadogTraceModuleOptions;
+interface DatadogTraceAsyncModuleOptions
+  extends Pick<ModuleMetadata, 'imports'> {
+  useFactory: (
+    ...args: any[]
+  ) => Promise<DatadogTraceModuleOptions> | DatadogTraceModuleOptions;
   inject: any[];
 }
 const DATADOG_TRACE_MODULE_PARAMS = Symbol('DATADOG_TRACE_MODULE_PARAMS');
-
 
 export class DatadogTraceModule {
   static forRoot(options: DatadogTraceModuleOptions = {}): DynamicModule {
@@ -29,7 +30,7 @@ export class DatadogTraceModule {
             }
           },
           inject: [DecoratorInjector],
-        }
+        },
       ],
       exports: [TraceService],
     };
@@ -51,12 +52,15 @@ export class DatadogTraceModule {
         {
           provide: Constants.TRACE_INJECTORS,
           inject: [DATADOG_TRACE_MODULE_PARAMS, DecoratorInjector],
-          useFactory: async (moduleOptions: DatadogTraceModuleOptions, ...injectors: Injector[]) => {
+          useFactory: async (
+            moduleOptions: DatadogTraceModuleOptions,
+            ...injectors: Injector[]
+          ) => {
             for await (const injector of injectors) {
               if (injector.inject) await injector.inject(moduleOptions);
             }
           },
-        }
+        },
       ],
       exports: [TraceService],
     };
