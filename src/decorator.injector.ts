@@ -188,8 +188,9 @@ export class DecoratorInjector implements Injector {
           } else {
             try {
               const result = prototype.apply(this, args);
-              // This handles the case where a function isn't async but returns a Promise
-              if (result && typeof result.then === 'function') {
+              // A non-async function can still return a Promise. Other thenables pass through
+              // untouched: they may lack catch/finally, and lazy ones run again on every then.
+              if (result instanceof Promise) {
                 return result
                   .catch((error) => {
                     DecoratorInjector.recordException(error, span);

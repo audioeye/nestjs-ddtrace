@@ -186,6 +186,66 @@ describe('DecoratorInjector', () => {
     scopeSpy.mockClear();
   });
 
+  it('should return a non-native thenable unchanged', async () => {
+    // given
+    class LazyThenable {
+      runs = 0;
+      timeoutMs?: number;
+
+      withTimeout(ms: number) {
+        this.timeoutMs = ms;
+        return this;
+      }
+
+      then(onfulfilled: (value: number) => unknown) {
+        this.runs += 1;
+        return Promise.resolve(this.timeoutMs).then(onfulfilled);
+      }
+    }
+    const thenable = new LazyThenable();
+
+    @Injectable()
+    class HelloService {
+      @Span('hello')
+      hi() {
+        return thenable;
+      }
+    }
+
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [DatadogTraceModule.forRoot()],
+      providers: [HelloService],
+    }).compile();
+
+    const helloService = module.get<HelloService>(HelloService);
+    const mockSpan = { finish: jest.fn() as any } as TraceSpan;
+    const startSpanSpy = jest
+      .spyOn(tracer, 'startSpan')
+      .mockReturnValue(mockSpan);
+    const scope = {
+      active: jest.fn(() => null) as any,
+      activate: jest.fn((span: TraceSpan, fn: (...args: any[]) => any): any => {
+        return fn();
+      }) as any,
+    } as Scope;
+    const scopeSpy = jest
+      .spyOn(tracer, 'scope')
+      .mockImplementation(() => scope);
+
+    // when
+    const result = helloService.hi();
+
+    // then
+    expect(result).toBe(thenable);
+    expect(thenable.runs).toBe(0);
+    expect(mockSpan.finish).toHaveBeenCalled();
+    expect(await result.withTimeout(1500)).toBe(1500);
+    expect(thenable.runs).toBe(1);
+
+    startSpanSpy.mockClear();
+    scopeSpy.mockClear();
+  });
+
   it('should record exception with sync function', async () => {
     // given
     @Injectable()
