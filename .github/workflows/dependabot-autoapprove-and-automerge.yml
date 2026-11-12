@@ -1,0 +1,11 @@
+name: Dependabot auto-approve and auto-merge
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    uses: audioeye/github-actions/.github/workflows/dependabot-autoapprove-and-automerge.yml@main
+    secrets: inherit
