@@ -1,0 +1,5 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "This repo is a fork, and Renovate skips forks unless the fork itself opts in. The org runner in audioeye/operations still applies the org preset from audioeye/github-actions; nothing else is overridden here.",
+  "forkProcessing": "enabled"
+}
