@@ -7,5 +7,5 @@ permissions:
 
 jobs:
   dependabot:
-    uses: audioeye/github-actions/.github/workflows/dependabot-autoapprove-and-automerge.yml@426ca7f366908a464667557f1394ab2486ce8eb0 # main
+    uses: audioeye/github-actions/.github/workflows/dependabot-autoapprove-and-automerge.yml@03ac1536bf16b0794891b65c11583548d42a9b00 # main
     secrets: inherit
