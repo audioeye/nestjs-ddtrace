@@ -1,0 +1,14 @@
+# Warns on pull requests with no activity for 30 days and closes them 60 days
+# later. The `keep-open` label exempts a pull request. The policy and every
+# setting live in audioeye/github-actions (.github/workflows/stale-prs.yml);
+# Renovate keeps the pin below current.
+name: Stale PRs
+on:
+  schedule:
+    - cron: "17 13 * * 1-5" # weekdays, 05:17 PST
+  workflow_dispatch:
+permissions: {}
+jobs:
+  stale:
+    uses: audioeye/github-actions/.github/workflows/stale-prs.yml@8f106b946e62562d6b39631361c400e894f205fe # main
+    secrets: inherit # passes RELEASE_BOT_PRIVATE_KEY to the reusable workflow
